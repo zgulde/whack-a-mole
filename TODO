@@ -1,0 +1,12 @@
+
+build a grid
+	within game-area div
+
+light up a random square
+
+on clicking the square that is lit up 
+	remove light up
+	light another square
+	increment score
+	update score
+	
