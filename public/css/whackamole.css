@@ -3,8 +3,8 @@
 	width: 400px;
 	border: 1px solid black;
 	position: relative;
-	top: 50px;
-	left: 50px;
+	margin: 50px 50px;
+	display: block;
 }
 
 .game-tile{
@@ -15,4 +15,15 @@
 
 .active{
 	background-color: firebrick;
+}
+
+#options{
+	display: block;
+}
+
+#display{
+	position: fixed;
+	top: 25px;
+	right: 25px;
+	border: 1px solid black;
 }

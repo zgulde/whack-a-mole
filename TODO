@@ -1,14 +1,21 @@
 TODO
-	build options as selects
-	grab values from the selects in the init function
-	display score (molesWhacked)
-	add timer displays for round length and delay before a new round
 	styling and images
 
 options that influence difficulty
+
 	roundLength
+		currently: hardcoded at 10s
+
 	how moles to whack is incremented
+		starts at numberOfTiles
+		curently: += numberOfTiles/2
+
 	#of tiles active when game is lost
 		as fraction of total tiles
+		currently: 3/4
+
 	number of tiles
+		currently: perfect square #
+
 	duration of the round interval
+		currently: roundLength/molesToWhack

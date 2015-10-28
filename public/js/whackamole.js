@@ -93,6 +93,7 @@
 		startNewRound: function(){
 			var game = this;
 			
+			game.startRoundTimer();
 			game.roundInterval = setInterval(function(){
 				if ( game.isGameLost() ) {
 					game.endGame();
@@ -104,7 +105,6 @@
 			game.roundTimeout = setTimeout( function(){
 				game.endRound();
 			}, game.options.roundLength);
-			
 		},
 
 		endRound: function(){
@@ -116,6 +116,7 @@
 			game.gameTiles.forEach(function(tile){
 				tile.setInactive(tile);
 			});
+			game.startBreakTimer();
 			setTimeout( function(){
 				game.startNewRound();
 			}, 3000);
@@ -134,7 +135,39 @@
 			if (gameTile.isActive){	
 				whackamole.molesWhacked++;
 				gameTile.setInactive(gameTile);
+				$('#score').text(whackamole.molesWhacked);
 			}
+		},
+
+		startBreakTimer: function(){
+			var $timer = $('#break-timer');
+			var i = 0;
+			$timer.show();
+			$timer.text(3-i);
+			var countingDown = setInterval(function(){
+				i++;
+				$timer.text(3-i);
+				if (i === 3){
+					clearInterval(countingDown);
+					$timer.hide();
+				}
+			},1000)
+		},
+
+		startRoundTimer: function(){
+			var $timer = $('#round-timer');
+			var i = 0;
+			var initial = this.options.roundLength / 1000; //ms to s
+			$timer.show();
+			$timer.text(initial-i);
+			var countingDown = setInterval(function(){
+				i++;
+				$timer.text(initial-i);
+				if (i === initial){
+					clearInterval(countingDown);
+					$timer.hide();
+				}
+			},1000)
 		},
 
 		init: function(){
