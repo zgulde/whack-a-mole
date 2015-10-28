@@ -1,3 +1,6 @@
+TODO
+	parseInt->parseFloat?
+
 
 build a grid
 	within game-area div
@@ -18,11 +21,11 @@ clickHandler
 		clearInt(this.activeInt)
 		this.removeClass active
 		isActive = false
-		this.timesClicked++
+		whackamole.timesClicked++
 
 lose when all tiles are lit
 
-function isGameLost
+function isGameLost()
 	var isGameLost = true;
 	gametiles.forEach(tile)
 		if tile.isActive = false
