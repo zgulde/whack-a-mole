@@ -17,8 +17,8 @@
 
 			$('#game-area').html('');
 
-			for(var i = 1; i <= numOfSquares; i++){
-				var $gameSquare = $('<div>').addClass('game-square').attr('id','square' + i);
+			for(var i = 0; i < numOfSquares; i++){
+				var $gameSquare = $('<div>').addClass('game-square').attr('id','square'+i);
 				$gameSquare.appendTo('#game-area');
 			}
 			$('.game-square').css('height',squareHeight);
@@ -27,5 +27,5 @@
 
 	}
 
-	whackamole.buildGame(25);
+	whackamole.buildGame(4);
 // });

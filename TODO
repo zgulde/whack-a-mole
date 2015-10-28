@@ -9,4 +9,44 @@ on clicking the square that is lit up
 	light another square
 	increment score
 	update score
-	
+
+pickrandomsquare to light()
+	check thissquare.isActive
+		pick again
+	lightup( (duration?) )
+		setClass active
+		isActive= true
+		activeInt = timeout
+			removeClass active
+			isActive = false
+
+
+clickHandler
+	clearInt(this.activeInt)
+	this.removeClass active
+	isActive = false
+
+lose when all squares are lit
+
+function isGameLost
+	var isGameLost = true;
+	gamesquares.forEach(square)
+		if square.isActive = false
+		isGameLost = false;
+	return isGameLost
+
+
+array of squares objects with isActive, lightUp(), id, clickHandler(), activeInt 
+	length = numOfGameSquares
+
+newRound()
+	timeout roundlength
+		clearInt(roundInt)
+		endRound()
+	var roundInt = setInterval (roundlength/somenumber)s
+		if isgamelost()
+			endgame()
+		pickrandomsquaretolight()
+
+
+
