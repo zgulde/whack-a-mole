@@ -10,11 +10,15 @@
 .game-tile{
 	box-sizing: border-box;
 	border: 1px solid black;
-	width: 200px;
+	/*width: 200px;*/
 	/*height: 200px;*/
 	float: left;
 }
 
 .game-tile:hover{
+	background-color: yellow;
+}
+
+.active{
 	background-color: firebrick;
 }
