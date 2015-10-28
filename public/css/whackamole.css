@@ -1,10 +1,16 @@
 #game-area{
-	height: 400px;
-	width: 400px;
+	height: 500px;
+	width: 500px;
 	border: 1px solid black;
 	position: relative;
-	margin: 50px 50px;
 	display: block;
+}
+
+#game-area,
+#options-area,
+#game-display{
+	float: left;
+	margin: 50px;
 }
 
 .game-tile{
@@ -14,16 +20,38 @@
 }
 
 .active{
-	background-color: firebrick;
+	background: url(/img/mole.jpg);
+	background-size: cover;
 }
 
-#options{
-	display: block;
+#options-area{
+	display: inline-block;
+	padding: 15px;
+	background-color: rgb(0,100,0);
+	border-radius: 10%;
 }
 
-#display{
-	position: fixed;
-	top: 25px;
-	right: 25px;
+#game-display{
 	border: 1px solid black;
+	padding: 10px;
+}
+
+.options-select{
+	display: block;
+	margin: 10px;
+}
+
+.display-element{
+	padding: 5px;
+}
+
+h2,
+label{
+	color: white;
+}
+
+button{
+	padding: 10px 15px;
+	color: white;
+	background-color: black;
 }
