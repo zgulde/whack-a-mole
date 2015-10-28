@@ -7,7 +7,7 @@
 	left: 50px;
 }
 
-.game-square{
+.game-tile{
 	box-sizing: border-box;
 	border: 1px solid black;
 	width: 200px;
@@ -15,6 +15,6 @@
 	float: left;
 }
 
-.game-square:hover{
+.game-tile:hover{
 	background-color: firebrick;
 }

@@ -2,16 +2,8 @@
 build a grid
 	within game-area div
 
-light up a random square
-
-on clicking the square that is lit up 
-	remove light up
-	light another square
-	increment score
-	update score
-
-pickrandomsquare to light()
-	check thissquare.isActive
+pickrandomtile to light()
+	check thistile.isActive
 		pick again
 	lightup( (duration?) )
 		setClass active
@@ -22,21 +14,23 @@ pickrandomsquare to light()
 
 
 clickHandler
-	clearInt(this.activeInt)
-	this.removeClass active
-	isActive = false
+	if this.isActive
+		clearInt(this.activeInt)
+		this.removeClass active
+		isActive = false
+		this.timesClicked++
 
-lose when all squares are lit
+lose when all tiles are lit
 
 function isGameLost
 	var isGameLost = true;
-	gamesquares.forEach(square)
-		if square.isActive = false
+	gametiles.forEach(tile)
+		if tile.isActive = false
 		isGameLost = false;
 	return isGameLost
 
 
-array of squares objects with isActive, lightUp(), id, clickHandler(), activeInt 
+array of tiles objects with isActive, lightUp(), id, clickHandler(), activeInt timesClicked
 	length = numOfGameSquares
 
 newRound()
@@ -46,7 +40,7 @@ newRound()
 	var roundInt = setInterval (roundlength/somenumber)s
 		if isgamelost()
 			endgame()
-		pickrandomsquaretolight()
+		pickrandomtiletolight()
 
 
 

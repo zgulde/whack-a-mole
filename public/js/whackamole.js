@@ -1,6 +1,10 @@
 // $(document).ready(function(){
 	var whackamole = {
 
+		game-tiles: [],
+
+
+
 		getGameAreaHeight: function(){
 			var height = $('#game-area').css('height');
 			return parseInt(height);
@@ -11,18 +15,18 @@
 			return parseInt(width);
 		},
 
-		buildGame: function(numOfSquares){
-			var squareHeight = whackamole.getGameAreaHeight()/Math.sqrt(numOfSquares);
-			var squareWidth = whackamole.getGameAreaWidth()/Math.sqrt(numOfSquares);
+		buildGame: function(numOfTiles){
+			var tileHeight = whackamole.getGameAreaHeight()/Math.sqrt(numOfTiles);
+			var tileWidth = whackamole.getGameAreaWidth()/Math.sqrt(numOfTiles);
 
 			$('#game-area').html('');
 
-			for(var i = 0; i < numOfSquares; i++){
-				var $gameSquare = $('<div>').addClass('game-square').attr('id','square'+i);
-				$gameSquare.appendTo('#game-area');
+			for(var i = 0; i < numOfTiles; i++){
+				var $gameTile = $('<div>').addClass('game-tile').attr('id','tile'+i);
+				$gameTile.appendTo('#game-area');
 			}
-			$('.game-square').css('height',squareHeight);
-			$('.game-square').css('width',squareWidth);
+			$('.game-tile').css('height',tileHeight);
+			$('.game-tile').css('width',tileWidth);
 		}
 
 	}
