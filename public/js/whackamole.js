@@ -7,8 +7,10 @@
 
 		gameTiles: [],
 		molesWhacked: 0,
-		roundInt: 0,
+		roundInterval: 0,
+		roundTimeout: 0,
 		roundLength: 10000,
+		molesToWhack: 10,
 
 		GameTile: function(idNumber){
 			
@@ -16,14 +18,16 @@
 				var gameTile = this;
 				gameTile.isActive = true;
 				$(gameTile.id).addClass('active');
-				gameTile.activeInt = setTimeout( function(){
-					gameTile.setInactive();
-				}, duration);
+				// gameTile.activeInt = setTimeout( function(){
+				// 	gameTile.setInactive();
+				// }, duration);
 			}
+
 			this.setInactive = function(){
 				this.isActive = false;
 				$(this.id).removeClass('active');
 			}
+
 			this.$html = $('<div>').addClass('game-tile').attr('id','tile'+idNumber).attr('data-value',idNumber);
 			this.id = '#tile' + idNumber;
 			this.isActive = false;
@@ -32,14 +36,16 @@
 
 		getGameAreaHeight: function(){
 			var height = $('#game-area').css('height');
-			return parseInt(height);
+			return parseFloat(height);
 		},
 
 		getGameAreaWidth: function(){
 			var width = $('#game-area').css('width');
-			return parseInt(width);
+			return parseFloat(width);
 		},
 
+
+		//numOfTiles must be a perfect square!
 		buildGame: function(numOfTiles){
 			var tileHeight = whackamole.getGameAreaHeight()/Math.sqrt(numOfTiles);
 			var tileWidth = whackamole.getGameAreaWidth()/Math.sqrt(numOfTiles);
@@ -70,58 +76,78 @@
 			}
 		},
 
-		//if all the tiles are lit return true else return false
+		//if half or more of the tiles are active return true else return false
 		isGameLost: function(){
-			var gameLost = true;
+			var numActive = 0;
 			this.gameTiles.forEach(function(tile){
-				if (tile.isActive === false) gameLost = false;
+				if (tile.isActive) numActive++;
 			});
-			return gameLost;
+			if (numActive >= (this.gameTiles.length/2) ){
+				return true;
+			} else {
+				return false;
+			}
 		},
 
 		startNewRound: function(){
 			var game = this;
-			if ( game.isGameLost() ) {
-				game.endGame();
-			} else {
-				setTimeout( function(){
-					game.endRound();
-				}, game.roundLength);
-				game.getRandomInactiveTile().setActive(5000);
-			}
+			game.molesToWhack = game.molesToWhack + (game.gameTiles.length/2);
+			
+			game.roundInterval = setInterval(function(){
+				if ( game.isGameLost() ) {
+					game.endGame();
+				} else {
+					game.getRandomInactiveTile().setActive();
+				}
+			}, (game.roundLength/game.molesToWhack) );
+				
+			game.roundTimeout = setTimeout( function(){
+				game.endRound();
+			}, game.roundLength);
+			
 		},
 
 		endRound: function(){
+			var game = this;
 			console.log("endRound called!");
-			console.log(this);
+			console.log("molesWhacked: " + game.molesWhacked);
+			clearInterval(game.roundInterval);
 			this.gameTiles.forEach(function(tile){
 				tile.setInactive(tile);
 			});
+			setTimeout( function(){
+				game.startNewRound();
+			}, 3000);
 		},
 
 		endGame: function(){
+			var game = this;
+			clearInterval(game.roundInterval);
+			clearInterval(game.roundTimeout);
 			alert('game over!');
 		},
 
 		tileClicked: function(){
 			var gameTile = whackamole.gameTiles[$(this).attr('data-value')];
 
-			if (gameTile.isActive){
-				
-				this.molesWhacked++;
+			if (gameTile.isActive){	
+				whackamole.molesWhacked++;
 				gameTile.setInactive(gameTile);
 				clearInterval(gameTile.activeInt);
 			}
 		},
 
 		init: function(){
-			this.buildGame(4);
+			this.buildGame(9);
 			$('.game-tile').on('click',this.tileClicked);
+			this.molesToWhack = this.gameTiles.length;
+			this.startNewRound();
 		}
 
 	}
 
-	whackamole.init();
-	whackamole.startNewRound();
+	$('#start-btn').click(function(){
+		whackamole.init();
+	});
 	
 // });

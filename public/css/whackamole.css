@@ -1,6 +1,6 @@
 #game-area{
-	height: 600px;
-	width: 600px;
+	height: 300px;
+	width: 300px;
 	border: 1px solid black;
 	position: relative;
 	top: 50px;
@@ -13,10 +13,6 @@
 	/*width: 200px;*/
 	/*height: 200px;*/
 	float: left;
-}
-
-.game-tile:hover{
-	background-color: yellow;
 }
 
 .active{
