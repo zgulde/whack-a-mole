@@ -14,13 +14,10 @@
 
 		GameTile: function(idNumber){
 			
-			this.setActive = function(duration){
+			this.setActive = function(){
 				var gameTile = this;
 				gameTile.isActive = true;
 				$(gameTile.id).addClass('active');
-				// gameTile.activeInt = setTimeout( function(){
-				// 	gameTile.setInactive();
-				// }, duration);
 			}
 
 			this.setInactive = function(){
@@ -76,13 +73,13 @@
 			}
 		},
 
-		//if half or more of the tiles are active return true else return false
+		//if 3/4 or more of the tiles are active return true else return false
 		isGameLost: function(){
 			var numActive = 0;
 			this.gameTiles.forEach(function(tile){
 				if (tile.isActive) numActive++;
 			});
-			if (numActive >= (this.gameTiles.length/2) ){
+			if ( numActive >= (3*this.gameTiles.length/4) ){
 				return true;
 			} else {
 				return false;
@@ -91,7 +88,6 @@
 
 		startNewRound: function(){
 			var game = this;
-			game.molesToWhack = game.molesToWhack + (game.gameTiles.length/2);
 			
 			game.roundInterval = setInterval(function(){
 				if ( game.isGameLost() ) {
@@ -109,10 +105,11 @@
 
 		endRound: function(){
 			var game = this;
+			game.molesToWhack += (game.gameTiles.length/2);
 			console.log("endRound called!");
 			console.log("molesWhacked: " + game.molesWhacked);
 			clearInterval(game.roundInterval);
-			this.gameTiles.forEach(function(tile){
+			game.gameTiles.forEach(function(tile){
 				tile.setInactive(tile);
 			});
 			setTimeout( function(){

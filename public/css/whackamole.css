@@ -1,6 +1,6 @@
 #game-area{
-	height: 300px;
-	width: 300px;
+	height: 400px;
+	width: 400px;
 	border: 1px solid black;
 	position: relative;
 	top: 50px;
@@ -10,8 +10,6 @@
 .game-tile{
 	box-sizing: border-box;
 	border: 1px solid black;
-	/*width: 200px;*/
-	/*height: 200px;*/
 	float: left;
 }
 
