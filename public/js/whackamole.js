@@ -9,8 +9,12 @@
 		molesWhacked: 0,
 		roundInterval: 0,
 		roundTimeout: 0,
-		roundLength: 10000,
-		molesToWhack: 10,
+		molesToWhack: 0,
+		options: {
+			numberOfTiles: 0,
+			roundLength: 0,
+			percentLoss: 0 // %
+		},
 
 		GameTile: function(idNumber){
 			
@@ -28,7 +32,6 @@
 			this.$html = $('<div>').addClass('game-tile').attr('id','tile'+idNumber).attr('data-value',idNumber);
 			this.id = '#tile' + idNumber;
 			this.isActive = false;
-			this.activeInt = 0;
 		},
 
 		getGameAreaHeight: function(){
@@ -73,13 +76,14 @@
 			}
 		},
 
-		//if 3/4 or more of the tiles are active return true else return false
+		//if percentLoss*numOfTiles are active return true else return false
 		isGameLost: function(){
+			var game = this;
 			var numActive = 0;
-			this.gameTiles.forEach(function(tile){
+			game.gameTiles.forEach(function(tile){
 				if (tile.isActive) numActive++;
 			});
-			if ( numActive >= (3*this.gameTiles.length/4) ){
+			if ( numActive >= (game.gameTiles.length * game.options.percentLoss) ){
 				return true;
 			} else {
 				return false;
@@ -95,11 +99,11 @@
 				} else {
 					game.getRandomInactiveTile().setActive();
 				}
-			}, (game.roundLength/game.molesToWhack) );
+			}, (game.options.roundLength/game.molesToWhack) );
 				
 			game.roundTimeout = setTimeout( function(){
 				game.endRound();
-			}, game.roundLength);
+			}, game.options.roundLength);
 			
 		},
 
@@ -130,15 +134,20 @@
 			if (gameTile.isActive){	
 				whackamole.molesWhacked++;
 				gameTile.setInactive(gameTile);
-				clearInterval(gameTile.activeInt);
 			}
 		},
 
 		init: function(){
-			this.buildGame(9);
-			$('.game-tile').on('click',this.tileClicked);
-			this.molesToWhack = this.gameTiles.length;
-			this.startNewRound();
+			var game = this;
+
+			game.options.numberOfTiles = parseInt($('#number-of-tiles-select').val());
+			game.options.percentLoss = parseFloat($('#percent-loss-select').val());
+			game.options.roundLength = parseInt($('#round-length-select').val());
+			game.molesToWhack = game.options.numberOfTiles;
+			
+			game.buildGame(game.options.numberOfTiles);
+			$('.game-tile').on('click',game.tileClicked);
+			game.startNewRound();
 		}
 
 	}

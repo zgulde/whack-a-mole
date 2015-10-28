@@ -7,6 +7,22 @@
 </head>
 <body>
 	<h1>Whack-A-Mole!</h1>
+	<select id="number-of-tiles-select">
+		<option value="4">small</option>
+		<option value="9">medium</option>
+		<option value="16">large</option>
+		<option value="25">extra large</option>
+	</select>
+	<select id="round-length-select">
+		<option value="10000">10s</option>
+		<option value="20000">20s</option>
+		<option value="30000">30s</option>
+	</select>
+	<select id="percent-loss-select">
+		<option value="0.5">50%</option>
+		<option value="0.75">75%</option>
+		<option value="1">100%</option>
+	</select>
 	<button id="start-btn">start!</button>
 	<div id="game-area"></div>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>

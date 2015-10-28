@@ -1,49 +1,14 @@
 TODO
-	parseInt->parseFloat?
+	build options as selects
+	grab values from the selects in the init function
+	display score (molesWhacked)
+	add timer displays for round length and delay before a new round
+	styling and images
 
-
-build a grid
-	within game-area div
-
-pickrandomtile to light()
-	check thistile.isActive
-		pick again
-	lightup( (duration?) )
-		setClass active
-		isActive= true
-		activeInt = timeout
-			removeClass active
-			isActive = false
-
-
-clickHandler
-	if this.isActive
-		clearInt(this.activeInt)
-		this.removeClass active
-		isActive = false
-		whackamole.timesClicked++
-
-lose when all tiles are lit
-
-function isGameLost()
-	var isGameLost = true;
-	gametiles.forEach(tile)
-		if tile.isActive = false
-		isGameLost = false;
-	return isGameLost
-
-
-array of tiles objects with isActive, lightUp(), id, clickHandler(), activeInt timesClicked
-	length = numOfGameSquares
-
-newRound()
-	timeout roundlength
-		clearInt(roundInt)
-		endRound()
-	var roundInt = setInterval (roundlength/somenumber)s
-		if isgamelost()
-			endgame()
-		pickrandomtiletolight()
-
-
-
+options that influence difficulty
+	roundLength
+	how moles to whack is incremented
+	#of tiles active when game is lost
+		as fraction of total tiles
+	number of tiles
+	duration of the round interval
