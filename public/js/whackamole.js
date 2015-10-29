@@ -170,7 +170,7 @@
 
 		endGame: function(){
 			var game = this;
-			game.animateMessage($('#message-display'),'Game Over!',0,3);
+			game.animateMessage($('#message-display'),'Game Over!',0,2);
 			$('#moles-shown').html('');
 			game.setWhackingPercentage();
 			game.animateMessage($('#moles-whacked'),'Whacking Percentage: ' + parseInt( (game.whackingPercentage*100) ) + '%',1000);
