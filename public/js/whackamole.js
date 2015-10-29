@@ -145,7 +145,7 @@
 			var game = this;
 			clearInterval(game.roundInterval);
 			clearInterval(game.roundTimeout);
-			alert('game over!');
+			$('#options-area').slideDown();
 		},
 
 		tileClicked: function(){
@@ -200,6 +200,7 @@
 			game.buildGame(game.options.numberOfTiles);
 			$('.game-tile').on('click',game.tileClicked);
 			game.startNewRound();
+			$('#options-area').slideUp();
 		}
 
 	}

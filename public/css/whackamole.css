@@ -6,7 +6,18 @@
 	display: block;
 }
 
-#whackamole-game{
+#graphic-timer{
+	height: 500px;
+	width: 20px;
+	position: absolute;
+	bottom: 0;
+	right: -30px;
+	background-color: firebrick;
+}
+
+#whackamole-game,
+#options-area,
+#game-display{
 	float: left;
 	margin: 50px;
 }
@@ -20,6 +31,11 @@
 .active{
 	background: url(/img/mole.jpg);
 	background-size: cover;
+}
+
+.options-element{
+	box-sizing: border-box;
+	border: 1px solid;
 }
 
 #options-area{
