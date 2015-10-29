@@ -6,13 +6,19 @@
 	var whackamole = {
 
 		gameTiles: [],
-		molesWhacked: 0,
+		score: 0,
 		roundInterval: 0,
 		roundTimeout: 0,
 		molesToWhack: 0,
+		currentRound: 0,
+		molesWhacked: 0,
+		whackingPercentage: 0,
+		molesShown: 0,
+		instructions: 'You lose when the moles cover your selected percentage of the board',
+
 		options: {
 			numberOfTiles: 0,
-			roundLength: 0,
+			roundLength: 0, // in ms
 			percentLoss: 0 // %
 		},
 
@@ -77,7 +83,7 @@
 				whackamole.gameTiles.push(gameTile);
 			}
 
-			$('#whackamole-game').html('');
+			$('#whackamole-game').html('<div id="graphic-timer"></div>');
 			$gameArea.css('position','absolute');
 			$gameArea.appendTo($('#whackamole-game'));
 
@@ -111,13 +117,17 @@
 
 		startNewRound: function(){
 			var game = this;
+			game.currentRound++;
+			game.animateMessage($('#message-display'),'Round ' + game.currentRound);
 			
 			game.startRoundTimer();
+
 			game.roundInterval = setInterval(function(){
 				if ( game.isGameLost() ) {
 					game.endGame();
 				} else {
 					game.getRandomInactiveTile().setActive();
+					game.molesShown++;
 				}
 			}, (game.options.roundLength/game.molesToWhack) );
 				
@@ -126,76 +136,123 @@
 			}, game.options.roundLength);
 		},
 
+		setWhackingPercentage: function(){
+			var game = this;
+			var roundWhackingPercentage = game.molesWhacked / game.molesShown;
+			if (game.currentRound === 1){
+				game.whackingPercentage = roundWhackingPercentage;
+			} else {
+				game.whackingPercentage = ( (game.whackingPercentage * (game.currentRound-1) ) + roundWhackingPercentage ) / game.currentRound;
+			}
+			game.molesWhacked = 0;
+			game.molesShown = 0;
+		},
+
 		endRound: function(){
 			var game = this;
+			game.animateMessage($('#moles-whacked'),'Moles Whacked: ' + game.molesWhacked);
+			game.animateMessage($('#moles-shown'),'Moles Shown: ' + game.molesShown,1000);
+			game.animateMessage($('#score-display'),'Score: ' + game.score,2000);
+
+			game.setWhackingPercentage();
 			game.molesToWhack += (game.gameTiles.length/2);
-			console.log("endRound called!");
-			console.log("molesWhacked: " + game.molesWhacked);
+			
 			clearInterval(game.roundInterval);
 			game.gameTiles.forEach(function(tile){
 				tile.setInactive(tile);
 			});
+
 			game.startBreakTimer();
 			setTimeout( function(){
 				game.startNewRound();
-			}, 3000);
+			}, 5000);
 		},
 
 		endGame: function(){
 			var game = this;
+			game.animateMessage($('#message-display'),'Game Over!',0,3);
+			$('#moles-shown').html('');
+			game.setWhackingPercentage();
+			game.animateMessage($('#moles-whacked'),'Whacking Percentage: ' + parseInt( (game.whackingPercentage*100) ) + '%',1000);
+			game.animateMessage($('#score-display'),'Score: ' + game.score,2000);
 			clearInterval(game.roundInterval);
 			clearInterval(game.roundTimeout);
-			$('#options-area').slideDown();
+			setTimeout( function(){
+				$('#options-area').slideDown();
+			}, 5000);
+			$('.game-tile').off('click',game.tileClicked);
 		},
 
 		tileClicked: function(){
 			var gameTile = whackamole.gameTiles[$(this).attr('data-value')];
 
 			if (gameTile.isActive){	
+				whackamole.score++;
 				whackamole.molesWhacked++;
 				gameTile.setInactive(gameTile);
-				$('#score').text(whackamole.molesWhacked);
 			}
 		},
 
 		startBreakTimer: function(){
-			var $timer = $('#break-timer');
-			var i = 0;
-			$timer.show();
-			$timer.text(3-i);
-			var countingDown = setInterval(function(){
-				i++;
-				$timer.text(3-i);
-				if (i === 3){
-					clearInterval(countingDown);
-					$timer.hide();
-				}
-			},1000)
+			var $timer = $('#graphic-timer');
+			$timer.height(whackamole.getGameAreaHeight() + 'px');
+			$timer.animate({height:'0'}, (5000 - 100) ,'linear');
 		},
 
 		startRoundTimer: function(){
-			var $timer = $('#round-timer');
-			var i = 0;
-			var initial = this.options.roundLength / 1000; //ms to s
-			$timer.show();
-			$timer.text(initial-i);
-			var countingDown = setInterval(function(){
-				i++;
-				$timer.text(initial-i);
-				if (i === initial){
-					clearInterval(countingDown);
-					$timer.hide();
-				}
-			},1000)
+			var $timer = $('#graphic-timer');
+			$timer.height(whackamole.getGameAreaHeight() + 'px');
+			$timer.animate({height:'0'}, (whackamole.options.roundLength - 100) ,'linear');
+		},
+
+		animateMessage: function($display,string,delay,duration){
+			var $span = $('<span>').addClass('typing-span');
+			if(!delay) delay = 0;
+			if(!duration) duration = 1;
+
+			setTimeout( function(){
+				$display.text(string); 
+				$span.html('&nbsp;');
+				$span.appendTo($display);
+				var steps = $display.text().length-1;
+				$span.css('animation','typing '+duration+'s steps('+steps+',end)');
+			}, delay);
+
+			setTimeout( function(){
+				$display.text(string);
+			}, delay + (1000*duration + 300) ) ;
+		},
+
+		showIntructions: function(){
+			var game = this;
+			$('#options-area').hide();
+			game.animateMessage($('#moles-whacked'),'You lose when the moles',0,1);
+			game.animateMessage($('#moles-shown'),'cover your selected',1000,1);
+			game.animateMessage($('#score-display'),'percentage of the board.',2000,1);
+			setTimeout( function(){
+				$('#options-area').slideDown();
+			}, 3000);
 		},
 
 		init: function(){
 			var game = this;
 
+			game.molesWhacked = 0;
+			game.molesShown = 0;
+			game.whackingPercentage = 0;
+			game.currentRound = 0;
+			game.score = 0;
+			game.molesToWhack = 0;
+			game.gameTiles = [];
+
 			game.options.numberOfTiles = parseInt($('#number-of-tiles-select').val());
 			game.options.percentLoss = parseFloat($('#percent-loss-select').val());
 			game.options.roundLength = parseInt($('#round-length-select').val());
 			game.molesToWhack = game.options.numberOfTiles;
+
+			$('#moles-whacked').html('');
+			$('#moles-shown').html('');
+			$('#score-display').html('');
 			
 			game.buildGame(game.options.numberOfTiles);
 			$('.game-tile').on('click',game.tileClicked);
@@ -208,5 +265,7 @@
 	$('#start-btn').click(function(){
 		whackamole.init();
 	});
+
+	whackamole.showIntructions();
 	
 // });

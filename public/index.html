@@ -4,25 +4,27 @@
 	<meta charset="UTF-8">
 	<title>Whack-A-Mole!</title>
 	<link rel="stylesheet" href="/css/whackamole.css">
+	<link rel="stylesheet" href="/css/animations.css">
 </head>
 <body>
-	<div id="whackamole-game">
-		<div id="graphic-timer"></div>
-	</div>
+	<div id="whackamole-game"></div>
 	<div id="game-display">
-		<div id="round-timer-display" class="display-element">
-			Time Left: <span id="round-timer"></span>
+		<div>
+			<h2 id="message-display" class="display-element">Whack-A-Mole!</h2>
 		</div>
-		<div id="break-timer-display" class="display-element">
-			New Round: <span id="break-timer"></span>
+		<div>
+			<h3 id="moles-whacked" class="display-element"></h3>
 		</div>
-		<div id="score-display" class="display-element">
-			Score: <span id="score"></span>
+		<div>
+			<h3 id="moles-shown" class="display-element"></h3>
+		</div>
+		<div>
+			<h3 id="score-display" class="display-element"></h3>
 		</div>
 	</div>
 	<div id="options-area">
 		<h2>Options</h2>
-		<label for="number-of-tiles-select">Size</label>
+		<label for="number-of-tiles-select">Board Size</label>
 		<select id="number-of-tiles-select" class="options-select">
 			<option value="4">small</option>
 			<option value="9" selected>medium</option>
@@ -35,7 +37,7 @@
 			<option value="20000">20s</option>
 			<option value="30000">30s</option>
 		</select>
-		<label for="percent-loss-select">Lose When</label>
+		<label for="percent-loss-select">Percent</label>
 		<select id="percent-loss-select" class="options-select">
 			<option value="0.5">50%</option>
 			<option value="0.75" selected>75%</option>
