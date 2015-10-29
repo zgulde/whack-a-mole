@@ -1,21 +1,98 @@
-TODO
-	styling and images
-
-options that influence difficulty
-
+main screen
+	heading 
+		[last score] [high score]
+	boardSize
+		sm md lg xl
 	roundLength
-		currently: hardcoded at 10s
+		10s 20s 30s
+	lossPercentage
+		50% 75% 100%
+	[intructions] [start]
 
-	how moles to whack is incremented
-		starts at numberOfTiles
-		curently: += numberOfTiles/2
+game screen
+	gameTiles
+	roundTimer
 
-	#of tiles active when game is lost
-		as fraction of total tiles
-		currently: 3/4
+break screen
+	[molesWhackedThisRound] [score]
+	breakTimer
+	[quit] [startNextRound]
 
-	number of tiles
-		currently: perfect square #
 
-	duration of the round interval
-		currently: roundLength/molesToWhack
+
+wam
+	fun init
+		$optionsArea = wam.options.buildOptionsArea()
+		$optionsArea.show()
+		
+	fun getGameAreaHeight
+	fun getGameAreaWidth
+
+	fun startGame
+		//initialize values
+		$optionsArea.hide()
+		$gameArea = game.buildGameArea()
+		game.setOptions()
+		startNewRound()
+
+	fun startNewRound
+		currentRound++
+		$gameArea.show()
+		game.startRound()
+
+	fun endGame
+		$gameArea.hide()
+		$optionsArea.show()
+
+	obj game
+		fun buildGameArea 
+		fun startRound(currentRoundNum)
+		fun getRandomNumber
+		fun getRandomInactiveTile
+		fun isGameLost
+			//check if 
+		fun tileClicked
+		fun endRound
+
+		obj GameTile
+
+
+		array gameTiles
+		roundIntId
+		roundTimeoutId
+		num molesWhacked
+
+
+
+	obj options
+		fun buildOptionsArea
+			returns $div
+				heading: 'whack-a-mole!'
+				numberOfTiles
+					sm md lg xl
+				roundLength
+					10s 20s 30s
+				lossPercentage
+					50% 75% 100%
+				instructionsBtn startBtn
+		fun startClicked
+			wam.$gameArea = buildGameArea(numberOfTiles)
+			$optionsArea.hide()
+			$gameArea.show()
+
+		num numberOfTiles
+		num roundLength //in ms
+		num lossPercentage  
+
+
+
+
+	obj break
+		fun buildBreakArea
+		//
+
+	num score
+	num currentRound
+	var $optionsArea
+	var $gameArea
+	var $breakArea

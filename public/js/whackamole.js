@@ -35,33 +35,52 @@
 		},
 
 		getGameAreaHeight: function(){
-			var height = $('#game-area').css('height');
+			var height = $('#whackamole-game').css('height');
 			return parseFloat(height);
 		},
 
 		getGameAreaWidth: function(){
-			var width = $('#game-area').css('width');
+			var width = $('#whackamole-game').css('width');
 			return parseFloat(width);
 		},
 
+		buildGameArea: function(){
+			var $gameArea = $('<div>').attr('id','game-area');
+			$gameArea.css('height',whackamole.getGameAreaHeight());
+			$gameArea.css('width',whackamole.getGameAreaWidth());
+			return $gameArea;
+		},
+
+		buildOptionsArea: function(){
+			var $optionsArea = $('<div>').attr('id','options-area');
+			$optionsArea.css('width',whackamole.getGameAreaWidth());
+			$optionsArea.css('width',whackamole.getGameAreaWidth());
+			return $optionsArea;
+		},
 
 		//numOfTiles must be a perfect square!
 		buildGame: function(numOfTiles){
+			var $gameArea = whackamole.buildGameArea();
+			var $optionsArea = whackamole.buildOptionsArea();
 			var tileHeight = whackamole.getGameAreaHeight()/Math.sqrt(numOfTiles);
 			var tileWidth = whackamole.getGameAreaWidth()/Math.sqrt(numOfTiles);
 
-			$('#game-area').html('');
 
 			for(var i = 0; i < numOfTiles; i++){
 				
 				var gameTile = new whackamole.GameTile(i);
 
-				gameTile.$html.appendTo('#game-area');
+				gameTile.$html.css('height',tileHeight);
+				gameTile.$html.css('width',tileWidth);
+
+				gameTile.$html.appendTo($gameArea);
 				whackamole.gameTiles.push(gameTile);
 			}
 
-			$('.game-tile').css('height',tileHeight);
-			$('.game-tile').css('width',tileWidth);
+			$('#whackamole-game').html('');
+			$gameArea.css('position','absolute');
+			$gameArea.appendTo($('#whackamole-game'));
+
 		},
 
 		//if you call this while all tiles are active it will create

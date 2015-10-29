@@ -1,14 +1,12 @@
-#game-area{
+#whackamole-game{
 	height: 500px;
-	width: 500px;
+	width: 600px;
 	border: 1px solid black;
 	position: relative;
 	display: block;
 }
 
-#game-area,
-#options-area,
-#game-display{
+#whackamole-game{
 	float: left;
 	margin: 50px;
 }
