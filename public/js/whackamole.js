@@ -1,6 +1,30 @@
-// $(document).ready(function(){
+$(document).ready(function(){
 	function getRandomNumber(min,max){
         return Math.floor( (Math.random() * (max-min+1) + min) );
+    }
+
+    function adjustSizes () {
+    	var windowHeight = $(window).height();
+    	var windowWidth = $(window).width();
+    	var tileSize = Math.sqrt(whackamole.options.numberOfTiles);
+
+    	if ( windowHeight > windowWidth ) {
+		    $('#whackamole-game').attr('class','eleven columns');
+		    $('#whackamole-game').css('height', (windowHeight * 0.65) );
+			$('#graphic-timer').attr('class','one column');
+			$('#graphic-timer').css('height', (windowHeight * 0.65) );
+			$('#game-display').attr('class','twelve columns');
+			$('#game-display').css('height', (windowHeight * 0.3) );
+		} else {
+			$('#whackamole-game').attr('class','seven columns');
+			$('#whackamole-game').css('height', (windowHeight * 0.95) );
+			$('#graphic-timer').attr('class','one column');
+			$('#graphic-timer').css('height', (windowHeight * 0.95) );
+			$('#game-display').attr('class','four columns');
+			$('#game-display').css('height', (windowHeight * 0.95) );
+		}
+		$('.game-tile').css('height',$('#whackamole-game').height()/tileSize);
+		$('.game-tile').css('width',$('#whackamole-game').width()/tileSize);
     }
 
 	var whackamole = {
@@ -66,11 +90,11 @@
 
 		//numOfTiles must be a perfect square!
 		buildGame: function(numOfTiles){
-			var $gameArea = whackamole.buildGameArea();
 			var $optionsArea = whackamole.buildOptionsArea();
 			var tileHeight = whackamole.getGameAreaHeight()/Math.sqrt(numOfTiles);
 			var tileWidth = whackamole.getGameAreaWidth()/Math.sqrt(numOfTiles);
 
+			$('#whackamole-game').html('');
 
 			for(var i = 0; i < numOfTiles; i++){
 				
@@ -79,13 +103,10 @@
 				gameTile.$html.css('height',tileHeight);
 				gameTile.$html.css('width',tileWidth);
 
-				gameTile.$html.appendTo($gameArea);
+				gameTile.$html.appendTo($('#whackamole-game'));
 				whackamole.gameTiles.push(gameTile);
 			}
 
-			$('#whackamole-game').html('<div id="graphic-timer"></div>');
-			$gameArea.css('position','absolute');
-			$gameArea.appendTo($('#whackamole-game'));
 
 		},
 
@@ -118,7 +139,11 @@
 		startNewRound: function(){
 			var game = this;
 			game.currentRound++;
-			game.animateMessage($('#message-display'),'Round ' + game.currentRound);
+			game.animateMessage($('#message-display'),'Round ' + game.currentRound,1000);
+			game.eraseMessage($('#message-display'));
+			game.eraseMessage($('#moles-whacked'),2500);
+			game.eraseMessage($('#moles-shown'),2000);
+			game.eraseMessage($('#score-display'),1500);
 			
 			game.startRoundTimer();
 
@@ -150,8 +175,8 @@
 
 		endRound: function(){
 			var game = this;
-			game.animateMessage($('#moles-whacked'),'Moles Whacked: ' + game.molesWhacked);
-			game.animateMessage($('#moles-shown'),'Moles Shown: ' + game.molesShown,1000);
+			game.animateMessage($('#moles-whacked'),'Hit: ' + game.molesWhacked);
+			game.animateMessage($('#moles-shown'),'Shown: ' + game.molesShown,1000);
 			game.animateMessage($('#score-display'),'Score: ' + game.score,2000);
 
 			game.setWhackingPercentage();
@@ -173,12 +198,15 @@
 			game.animateMessage($('#message-display'),'Game Over!',0,2);
 			$('#moles-shown').html('');
 			game.setWhackingPercentage();
-			game.animateMessage($('#moles-whacked'),'Whacking Percentage: ' + parseInt( (game.whackingPercentage*100) ) + '%',1000);
-			game.animateMessage($('#score-display'),'Score: ' + game.score,2000);
+			game.animateMessage($('#moles-whacked'),'Hit %: ' + parseInt( (game.whackingPercentage*100) ) + '%',1000);
+			game.animateMessage($('#moles-shown'),'Score: ' + game.score,2000);
 			clearInterval(game.roundInterval);
 			clearInterval(game.roundTimeout);
 			setTimeout( function(){
 				$('#options-area').slideDown();
+				$('#game-display').fadeOut();
+				$('#graphic-timer').hide();
+				$('#whackamole-game').fadeOut();
 			}, 5000);
 			$('.game-tile').off('click',game.tileClicked);
 		},
@@ -223,14 +251,34 @@
 			}, delay + (1000*duration + 300) ) ;
 		},
 
+		eraseMessage: function($display,delay,duration){
+			var $span = $('<span>').addClass('typing-span');
+			if(!delay) delay = 0;
+			if(!duration) duration = 1;
+
+			setTimeout( function(){
+				$span.html('&nbsp;');
+				$span.appendTo($display);
+				var steps = $display.text().length-1;
+				$span.css('animation','typing '+duration+'s reverse steps('+steps+',end)');
+			}, delay);
+
+			setTimeout( function(){
+				$display.html('');
+			}, delay + (1000*duration) - 10 ) ;
+		},
+
 		showIntructions: function(){
 			var game = this;
 			$('#options-area').hide();
-			game.animateMessage($('#moles-whacked'),'You lose when the moles',0,1);
-			game.animateMessage($('#moles-shown'),'cover your selected',1000,1);
-			game.animateMessage($('#score-display'),'percentage of the board.',2000,1);
+			game.animateMessage($('#moles-whacked'),'Don\'t let',0,1);
+			game.animateMessage($('#moles-shown'),'the board',1000,1);
+			game.animateMessage($('#score-display'),'fill up!',2000,1);
 			setTimeout( function(){
 				$('#options-area').slideDown();
+				$('#game-display').fadeOut();
+				$('#whackamole-game').fadeOut();
+				$('#graphic-timer').hide();
 			}, 3000);
 		},
 
@@ -250,14 +298,17 @@
 			game.options.roundLength = parseInt($('#round-length-select').val());
 			game.molesToWhack = game.options.numberOfTiles;
 
-			$('#moles-whacked').html('');
-			$('#moles-shown').html('');
-			$('#score-display').html('');
+			game.eraseMessage($('#moles-whacked'),3000);
+			game.eraseMessage($('#moles-shown'),2000);
+			game.eraseMessage($('#score-display'),1000);
 			
 			game.buildGame(game.options.numberOfTiles);
 			$('.game-tile').on('click',game.tileClicked);
 			game.startNewRound();
 			$('#options-area').slideUp();
+			$('#whackamole-game').fadeIn();
+			$('#game-display').fadeIn();
+			$('#graphic-timer').show();
 		}
 
 	}
@@ -267,5 +318,23 @@
 	});
 
 	whackamole.showIntructions();
+
+	$('#options-area h2').next().slideUp();
+	$('#options-area h2').click(function(){
+		$(this).next().slideToggle();
+	});
+
+	$(window).resize(function(){
+		adjustSizes();
+	});
+
+	adjustSizes();
+
+	//using fastclick.js
+	if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+}
 	
-// });
+});
